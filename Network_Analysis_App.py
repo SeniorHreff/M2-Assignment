@@ -11,12 +11,7 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 import networkx as nx
-import warnings
 
-# Ignore all future warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import matplotlib.pyplot as plt
 import json
 import urllib.request # This package is used to get access to the edgelist file in the GitHub repository
 
