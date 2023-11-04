@@ -117,4 +117,4 @@ if visualization_option == "In-Degree Centrality":
                                                                         node_size='in_cent_degree',
                                                                         legend_position='right'
                                                                         )
-    show(hv.render(g_plot))
+    st.bokeh_chart(hv.render(g_plot))
