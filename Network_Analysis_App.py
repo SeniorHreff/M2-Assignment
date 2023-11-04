@@ -109,4 +109,4 @@ if visualization_option == "In-Degree Centrality":
                                                                         node_size='in_cent_degree',
                                                                         legend_position='right'
                                                                         )
-    show((g_plot))
+    show(hv.render(g_plot))
