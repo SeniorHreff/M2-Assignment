@@ -7,9 +7,7 @@ import seaborn as sns
 import numpy as np
 from shapely.geometry import Point
 import folium
-from folium.plugins import MarkerCluster
 import geopandas as gpd
-from streamlit_folium import st_folium
 import numpy as np
 import pandas as pd
 import networkx as nx
