@@ -1,0 +1,10 @@
+streamlit
+pandas
+matplotlib.pyplot
+seaborn
+folium
+geopandas
+numpy
+networkx
+warnings
+bokeh == 2.4.3
