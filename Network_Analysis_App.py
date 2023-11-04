@@ -7,11 +7,10 @@ import seaborn as sns
 import numpy as np
 from shapely.geometry import Point
 import folium
+from folium.plugins import MarkerCluster
 import geopandas as gpd
-import numpy as np
-import pandas as pd
+from streamlit_folium import st_folium
 import networkx as nx
-
 import json
 import urllib.request # This package is used to get access to the edgelist file in the GitHub repository
 
@@ -110,4 +109,4 @@ if visualization_option == "In-Degree Centrality":
                                                                         node_size='in_cent_degree',
                                                                         legend_position='right'
                                                                         )
-    st.bokeh_chart(hv.render(g_plot))
+    show(hv.render(g_plot))
