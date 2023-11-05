@@ -3,16 +3,58 @@ import streamlit.components.v1 as components
 import pandas as pd
 import networkx as nx
 from pyvis.network import Network
+import urllib.request
 
-# Read dataset (CSV)
-df_interact = pd.read_csv('https://raw.githubusercontent.com/kennethleungty/Pyvis-Network-Graph-Streamlit/0450b66f26bcbcb6c88b786ab27cbce69b95a942/data/processed_drug_interactions.csv')
+# We define the URL for the raw edgelist file from our created GitHub repository.
+github_edgelist_url = 'https://raw.githubusercontent.com/CamillaSSvendsen/M2/main/congress.edgelist'
+
+# To get access to the data in the edgelist file from the GitHub repository, we use the urllib.request library.
+edgelist_file = urllib.request.urlopen(github_edgelist_url)
+
+# We then use the NetworkX library to read the edgelist as a directed graph (DiGraph) and define it G.
+G = nx.read_edgelist(edgelist_file, create_using=nx.DiGraph(), data=True)
+# The default is undirected graph.
+# data=True is necessary since the edgelist file contains additional information (data) associated with the edges. The additional information is weight.
+
+# We also load the json file containing an inList, inWeight, outList, outWeight, and usernameList.
+data = pd.read_json("https://raw.githubusercontent.com/CamillaSSvendsen/M2/main/congress_network_data.json")
+# From this file we are interested in the list of usernames.
+
+df = pd.DataFrame(columns=['Source', 'Target', 'Weight'])
+
+dfs = []
+
+for a, b, wei in G.edges(data=True):
+    source, target, weight = a, b, wei.get('weight', None)
+    data = {'Source': [source], 'Target': [target], 'Weight': [weight]}
+    df = pd.DataFrame(data)
+    dfs.append(df)
+
+df = pd.concat(dfs, ignore_index=True)
+
+i = 0
+for node in G.nodes():
+    if 'usernameList' in data and i < len(data['usernameList'][0]):
+        G.add_node(node, name=data['usernameList'][0][i])
+        i += 1
+
+dfs = []
+
+for id, name in G.nodes(data=True):
+    name_value = name.get('name')
+    data = {'id': [int(id)], 'name': [name_value]}
+    df = pd.DataFrame(data)
+    dfs.append(df)
+
+# Concatenate the list of DataFrames into a single DataFrame
+names_df = pd.concat(dfs, ignore_index=True)
+
 
 # Set header title
 st.title('Network Graph Visualization of Drug-Drug Interactions')
 
 # Define list of selection options and sort alphabetically
-drug_list = ['Metformin', 'Glipizide', 'Lisinopril', 'Simvastatin',
-            'Warfarin', 'Aspirin', 'Losartan', 'Ibuprofen']
+drug_list = names_df['name']
 drug_list.sort()
 
 # Implement multiselect dropdown menu for option selection (returns a list)
@@ -24,8 +66,8 @@ if len(selected_drugs) == 0:
 
 # Create network graph when user selects >= 1 item
 else:
-    df_select = df_interact.loc[df_interact['drug_1_name'].isin(selected_drugs) | \
-                                df_interact['drug_2_name'].isin(selected_drugs)]
+    df_select = df.loc[df['Source'].isin(selected_drugs) | \
+                                df['Target'].isin(selected_drugs)]
     df_select = df_select.reset_index(drop=True)
 
     # Create networkx graph object from pandas dataframe
