@@ -55,7 +55,6 @@ st.title('Network Graph Visualization of Drug-Drug Interactions')
 
 # Define list of selection options and sort alphabetically
 drug_list = names_df['name']
-drug_list.sort()
 
 # Implement multiselect dropdown menu for option selection (returns a list)
 selected_drugs = st.multiselect('Select drug(s) to visualize', drug_list)
