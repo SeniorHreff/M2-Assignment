@@ -49,6 +49,7 @@ for id, name in G.nodes(data=True):
 # Concatenate the list of DataFrames into a single DataFrame
 names_df = pd.concat(dfs, ignore_index=True)
 
+print(names_df.head())
 
 # Set header title
 st.title('Network Graph Visualization of Drug-Drug Interactions')
